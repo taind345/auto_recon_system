@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AUTO_RECON v2 - Hacker Terminal Edition</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary-fixed": "#6bff83",
+            "primary": "#edffe8",
+            "inverse-on-surface": "#2d3130",
+            "on-tertiary-container": "#835900",
+            "on-tertiary": "#432c00",
+            "surface-bright": "#363a38",
+            "surface-container-high": "#272b29",
+            "on-secondary-container": "#006a6f",
+            "on-secondary-fixed-variant": "#004f53",
+            "tertiary-fixed-dim": "#ffba43",
+            "secondary-fixed-dim": "#00dce6",
+            "surface-container-low": "#181c1b",
+            "on-secondary": "#00373a",
+            "inverse-primary": "#006e27",
+            "tertiary-container": "#ffd79e",
+            "error-container": "#93000a",
+            "on-primary": "#003911",
+            "secondary-container": "#00f1fd",
+            "surface": "#101413",
+            "on-primary-fixed": "#002107",
+            "on-tertiary-fixed-variant": "#614000",
+            "on-tertiary-fixed": "#281800",
+            "on-surface": "#e0e3e0",
+            "surface-dim": "#101413",
+            "outline": "#849581",
+            "on-primary-fixed-variant": "#00531b",
+            "inverse-surface": "#e0e3e0",
+            "primary-container": "#00ff66",
+            "error": "#ffb4ab",
+            "surface-tint": "#00e55b",
+            "outline-variant": "#3b4b3a",
+            "tertiary-fixed": "#ffddaf",
+            "on-primary-container": "#007128",
+            "surface-container-highest": "#323634",
+            "surface-container-lowest": "#0b0f0e",
+            "on-background": "#e0e3e0",
+            "primary-fixed-dim": "#00e55b",
+            "background": "#101413",
+            "surface-container": "#1c201f",
+            "tertiary": "#fff8f4",
+            "secondary": "#dcfdff",
+            "on-surface-variant": "#b9ccb5",
+            "secondary-fixed": "#6ff6ff",
+            "on-error-container": "#ffdad6",
+            "on-error": "#690005",
+            "on-secondary-fixed": "#002022",
+            "surface-variant": "#323634"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter": "0.75rem",
+            "space-md": "0.5rem",
+            "gutter-mobile": "0.5rem",
+            "space-xs": "0.125rem",
+            "space-lg": "0.75rem",
+            "margin": "1rem",
+            "space-xl": "1.25rem",
+            "margin-mobile": "0.5rem",
+            "space-sm": "0.25rem"
+          },
+          "fontFamily": {
+            "label-sm": ["Space Mono"],
+            "headline-xl": ["JetBrains Mono"],
+            "headline-lg": ["JetBrains Mono"],
+            "headline-xl-mobile": ["JetBrains Mono"],
+            "label-md": ["Space Mono"],
+            "body-md": ["JetBrains Mono"],
+            "body-lg": ["JetBrains Mono"],
+            "label-lg": ["Space Mono"],
+            "headline-md": ["JetBrains Mono"],
+            "body-sm": ["JetBrains Mono"]
+          },
+          "fontSize": {
+            "label-sm": ["9px", { "lineHeight": "12px", "letterSpacing": "0.12em", "fontWeight": "700" }],
+            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "headline-xl-mobile": ["26px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "label-md": ["10px", { "lineHeight": "14px", "letterSpacing": "0.1em", "fontWeight": "700" }],
+            "body-md": ["12px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+            "body-lg": ["14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "500" }],
+            "label-lg": ["12px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "700" }],
+            "headline-md": ["18px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "600" }],
+            "body-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .crt-scanlines {
+      background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.28) 0px, transparent 1px, transparent 2px);
+    }
+    .phosphor-glow-primary {
+      box-shadow: 0 0 10px rgba(0, 255, 102, 0.4), inset 0 0 4px rgba(0, 255, 102, 0.2);
+    }
+    .phosphor-glow-warning {
+      box-shadow: 0 0 10px rgba(255, 176, 0, 0.35), inset 0 0 4px rgba(255, 176, 0, 0.15);
+    }
+    .phosphor-glow-cyan {
+      box-shadow: 0 0 10px rgba(0, 243, 255, 0.35), inset 0 0 4px rgba(0, 243, 255, 0.15);
+    }
+    .border-phosphor {
+      border: 1.5px solid #00ff66;
+    }
+    .border-tactical {
+      border: 1px solid #1a2420;
+    }
+    .cursor-blink {
+      display: inline-block;
+      width: 7px;
+      height: 14px;
+      background-color: #00ff66;
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    /* custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0f0e;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #3b4b3a;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00ff66;
+    }
+  </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface font-body-sm antialiased overflow-x-hidden selection:bg-primary-container selection:text-surface-container-lowest">
+<!-- ==================== LEFT VERTICAL RAIL (SideNavBar) ==================== -->
+<aside class="fixed top-0 left-0 h-screen w-64 flex flex-col justify-between p-space-sm border-r border-outline-variant bg-surface-container-low z-40 select-none">
+<!-- Top Branding & Target Scope Card -->
+<div class="flex flex-col gap-space-sm">
+<!-- Rail Header -->
+<div class="flex items-center justify-between border-b border-outline-variant pb-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary-container text-[20px]">terminal</span>
+<div>
+<div class="text-headline-sm font-headline-sm font-bold text-secondary tracking-tight flex items-center gap-1">
+              AUTO_RECON <span class="text-label-sm font-label-sm px-1 py-0.5 bg-outline-variant text-primary-container border border-primary-container">v2.4.1</span>
+</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-primary-container inline-block animate-pulse"></span>
+              OSCP Safe Rail
+            </div>
+</div>
+</div>
+<span class="text-label-sm font-label-sm px-1 py-0.5 border border-primary-container text-primary-container bg-surface-container">SEC:0x7F</span>
+</div>
+<!-- Target Scope Card -->
+<div class="bg-surface-container-lowest border-tactical p-space-sm flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm text-secondary-fixed flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-secondary-fixed">hub</span>
+            TARGET SCOPE
+          </span>
+<span class="text-label-sm font-label-sm text-primary-container border border-primary-container px-1 bg-surface-container-high">[IN_SCOPE]</span>
+</div>
+<div class="text-body-sm font-body-sm font-bold text-primary truncate">target-portal.lab</div>
+<div class="flex justify-between items-center text-label-sm font-label-sm text-on-surface-variant pt-1 border-t border-outline-variant">
+<span>HOST: 192.168.182.140</span>
+<span class="text-primary-container font-mono">RTT: 12ms</span>
+</div>
+</div>
+<!-- Navigation Tabs (JSON: 9 tabs) -->
+<nav class="flex flex-col gap-0.5 mt-1">
+<!-- Tab 1: Overview -->
+<a class="flex items-center justify-between px-space-sm py-1 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-sm transition-all duration-150" href="#overview">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[16px]">hub</span>
+<span class="text-label-sm font-label-sm">Overview</span>
+</div>
+<span class="text-label-sm font-label-sm text-on-surface-variant border border-outline-variant px-1">[MAP]</span>
+</a>
+<!-- Tab 2: Subdomains -->
+<a class="flex items-center justify-between px-space-sm py-1 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-sm transition-all duration-150" href="#subdomains">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[16px]">domain</span>
+<span class="text-label-sm font-label-sm">Subdomains</span>
+</div>
+<span class="text-label-sm font-label-sm text-outline px-1">[0]</span>
+</a>
+<!-- Tab 3: Ports -->
+<a class="flex items-center justify-between px-space-sm py-1 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-sm transition-all duration-150" href="#ports">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[16px]">lan</span>
+<span class="text-label-sm font-label-sm">Ports</span>
+</div>
+<span class="text-label-sm font-label-sm text-secondary-fixed border border-secondary-fixed/40 px-1">[3]</span>
+</a>
+<!-- Tab 4: Endpoints Tree (ACTIVE TAB) -->
+<a class="flex items-center justify-between px-space-sm py-1 bg-primary-container text-surface-container-lowest font-semibold rounded-none border-l-4 border-primary phosphor-glow-primary" href="#endpoints">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[16px] text-surface-container-lowest" style="font-variation-settings: 'FILL' 1;">account_tree</span>
+<span class="text-label-sm font-label-sm font-bold tracking-wider">Endpoints Tree</span>
+</div>
+<span class="text-label-sm font-label-sm font-bold bg-surface-container-lowest text-primary-container px-1.5 py-0.2">[142]</span>
+</a>
+<!-- Tab 5: Params & Inputs -->
+<a class="flex items-center justify-between px-space-sm py-1 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-sm transition-all duration-150" href="#params">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span class="text-label-sm font-label-sm">Params &amp; Inputs</span>
+</div>
+<span class="text-label-sm font-label-sm text-tertiary-fixed-dim px-1 border border-outline-variant">[36]</span>
+</a>
+<!-- Tab 6: JS & Links -->
+<a class="flex items-center justify-between px-space-sm py-1 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-sm transition-all duration-150" href="#js">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[16px]">code</span>
+<span class="text-label-sm font-label-sm">JS &amp; Links</span>
+</div>
+<span class="text-label-sm font-label-sm text-on-surface-variant px-1 border border-outline-variant">[8]</span>
+</a>
+<!-- Tab 7: Tech & Files -->
+<a class="flex items-center justify-between px-space-sm py-1 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-sm transition-all duration-150" href="#tech">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[16px]">inventory_2</span>
+<span class="text-label-sm font-label-sm">Tech &amp; Files</span>
+</div>
+<span class="text-label-sm font-label-sm text-on-surface-variant px-1 border border-outline-variant">[14]</span>
+</a>
+<!-- Tab 8: Auth Matrix -->
+<a class="flex items-center justify-between px-space-sm py-1 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-sm transition-all duration-150" href="#auth">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[16px]">sync_alt</span>
+<span class="text-label-sm font-label-sm">Auth Matrix</span>
+</div>
+<span class="text-label-sm font-label-sm text-primary-container border border-primary-container px-1 bg-surface-container-high">[+58]</span>
+</a>
+<!-- Tab 9: Notes & Export -->
+<a class="flex items-center justify-between px-space-sm py-1 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-sm transition-all duration-150" href="#notes">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[16px]">terminal</span>
+<span class="text-label-sm font-label-sm">Notes &amp; Export</span>
+</div>
+<span class="text-label-sm font-label-sm text-secondary px-1 border border-outline-variant">[OSCP]</span>
+</a>
+</nav>
+</div>
+<!-- Bottom Rail Actions & Session Status -->
+<div class="flex flex-col gap-space-sm pt-space-sm border-t border-outline-variant">
+<!-- Quick Burp Copy Button (JSON CTA) -->
+<button class="w-full py-1.5 px-space-sm bg-transparent border border-primary-container text-primary-container text-label-sm font-label-sm flex items-center justify-center gap-2 hover:bg-primary-container hover:text-surface-container-lowest transition-all duration-150">
+<span class="material-symbols-outlined text-[15px]">content_copy</span>
+        [+] Quick Burp Copy
+      </button>
+<!-- Auth session indicator -->
+<div class="bg-surface-container-lowest border border-outline-variant p-space-xs text-label-sm font-label-sm flex flex-col gap-0.5">
+<div class="flex items-center justify-between text-secondary">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] text-primary-container">shield_lock</span>
+            [#] AUTH: wiener
+          </span>
+<span class="text-primary-container">[+] VALID COOKIE</span>
+</div>
+<div class="text-[9px] text-outline font-mono truncate">Cookie: PHPSESSID=s%3Awiener.v94</div>
+</div>
+<!-- Rail Footer Tabs (JSON) -->
+<div class="grid grid-cols-2 gap-1 text-label-sm font-label-sm">
+<button class="flex items-center gap-1 p-1 text-on-surface-variant hover:text-primary border border-outline-variant hover:border-primary-container bg-surface-container-lowest justify-center">
+<span class="material-symbols-outlined text-[14px]">memory</span>
+          Module Status
+        </button>
+<button class="flex items-center gap-1 p-1 text-on-surface-variant hover:text-primary border border-outline-variant hover:border-primary-container bg-surface-container-lowest justify-center">
+<span class="material-symbols-outlined text-[14px]">settings</span>
+          Settings
+        </button>
+</div>
+</div>
+</aside>
+<!-- ==================== MAIN CONTENT WRAPPER (Offset by Sidebar) ==================== -->
+<div class="ml-64 flex flex-col min-h-screen bg-surface-container-lowest">
+<!-- ==================== TOP NAVIGATION HEADER (TopNavBar) ==================== -->
+<header class="flex justify-between items-center w-full px-space-md py-space-xs border-b border-outline-variant bg-surface-container-lowest z-30 sticky top-0">
+<!-- Left: Target URL and Status Badge -->
+<div class="flex items-center gap-space-md flex-1 max-w-2xl">
+<div class="flex items-center gap-1 bg-surface-container-low border border-outline-variant px-space-sm py-1 w-full focus-within:border-primary-container">
+<span class="text-primary-container text-body-sm font-body-sm font-bold">&gt;&gt;&gt;</span>
+<input class="bg-transparent border-0 text-primary font-body-sm font-mono text-[12px] p-0 w-full focus:ring-0 focus:outline-none" readonly="" type="text" value="https://target-portal.lab/"/>
+<span class="text-label-sm font-label-sm bg-surface-container-high border border-primary-container text-primary-container px-1 py-0.2 shrink-0">[200 OK]</span>
+<span class="text-label-sm font-label-sm text-outline shrink-0">12ms</span>
+</div>
+</div>
+<!-- Center & Right: Navigation Links, Profiles, Controls (JSON TopNavBar) -->
+<div class="flex items-center gap-space-md">
+<!-- Profiles -->
+<div class="flex items-center border border-outline-variant bg-surface-container-low text-label-sm font-label-sm">
+<button class="px-2 py-1 text-on-surface-variant hover:text-primary border-r border-outline-variant">[Nhanh ~2m]</button>
+<button class="px-2 py-1 text-on-surface-variant hover:text-primary border-r border-outline-variant">[Sâu ~8m]</button>
+<button class="px-2 py-1 text-primary-container bg-surface-container font-semibold border-b-2 border-primary-container pb-0.5">[Profile: OSCP-thi]</button>
+</div>
+<!-- Proxy & Active Navigation Links from JSON -->
+<div class="flex items-center gap-space-sm text-label-sm font-label-sm">
+<div class="flex items-center gap-1 border border-outline-variant px-2 py-1 bg-surface-container-low text-secondary">
+<span class="w-1.5 h-1.5 bg-secondary-container rounded-full"></span>
+            Burp 127.0.0.1:8080
+          </div>
+<span class="text-on-surface-variant px-1 border border-outline-variant">Enum-Only Mode</span>
+</div>
+<!-- Trailing actions: Stop & Launch Scan -->
+<div class="flex items-center gap-space-sm">
+<button class="px-2 py-1 border border-error-container text-error text-label-sm font-label-sm hover:bg-error-container hover:text-on-error transition-all duration-100 active:scale-95">
+            Stop
+          </button>
+<button class="px-3 py-1 bg-primary-container text-surface-container-lowest text-label-sm font-label-sm font-bold uppercase tracking-wider hover:brightness-110 phosphor-glow-primary active:scale-95 transition-all duration-100 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">rocket_launch</span>
+            Launch Scan
+          </button>
+</div>
+<!-- Trailing Icon Actions from JSON -->
+<div class="flex items-center gap-1 border-l border-outline-variant pl-space-sm">
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="Dark Mode">
+<span class="material-symbols-outlined text-[18px]">dark_mode</span>
+</button>
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="Shield Lock">
+<span class="material-symbols-outlined text-[18px]">shield_lock</span>
+</button>
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="Terminal">
+<span class="material-symbols-outlined text-[18px]">terminal</span>
+</button>
+</div>
+</div>
+</header>
+<!-- ==================== BODY CONTENT CANVAS ==================== -->
+<main class="p-space-sm flex flex-col gap-space-sm">
+<!-- ==================== 1. PIPELINE EXECUTION MODULES (8-Grid Box) ==================== -->
+<section class="border-tactical bg-surface-container-low p-space-sm">
+<div class="flex items-center justify-between pb-space-xs border-b border-outline-variant mb-space-xs">
+<div class="flex items-center gap-2">
+<span class="text-label-sm font-label-sm text-primary-container flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">sync</span>
+              PIPELINE EXECUTION STATUS // OSCP SAFE PROFILE
+            </span>
+<span class="text-label-sm font-label-sm text-outline">[RUNNING: 4/8]</span>
+</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-2">
+<span>THREADS: 10</span>
+<span>RATE-LIMIT: 200 req/s</span>
+<span class="text-primary-container">BURP SYNC: ACTIVE</span>
+</div>
+</div>
+<div class="grid grid-cols-8 gap-1">
+<!-- M1 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-space-xs">
+<div class="flex items-center justify-between text-[9px] text-outline font-mono">
+<span>M1:PORTS</span>
+<span class="text-primary-container">DONE</span>
+</div>
+<div class="text-body-sm font-body-sm font-bold text-primary mt-0.5">3 OPEN</div>
+<div class="text-[9px] text-on-surface-variant truncate font-mono">80, 443, 8080</div>
+</div>
+<!-- M2 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-space-xs opacity-60">
+<div class="flex items-center justify-between text-[9px] text-outline font-mono">
+<span>M2:PASSIVE</span>
+<span class="text-outline">SKIP</span>
+</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant mt-0.5">SKIPPED</div>
+<div class="text-[9px] text-outline truncate font-mono">OSCP Safe Mode</div>
+</div>
+<!-- M3 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-space-xs">
+<div class="flex items-center justify-between text-[9px] text-outline font-mono">
+<span>M3:CRAWL_ANON</span>
+<span class="text-primary-container">98%</span>
+</div>
+<div class="text-body-sm font-body-sm font-bold text-primary mt-0.5">84 URLs</div>
+<div class="text-[9px] text-on-surface-variant truncate font-mono">Katana unauth</div>
+</div>
+<!-- M4 (Highlighted Active) -->
+<div class="bg-surface-container-high border-phosphor p-space-xs phosphor-glow-primary">
+<div class="flex items-center justify-between text-[9px] text-primary-container font-mono font-bold">
+<span>M4:CRAWL_AUTH</span>
+<span class="animate-pulse">● RUN</span>
+</div>
+<div class="text-body-sm font-body-sm font-bold text-primary-container mt-0.5">142 URLs</div>
+<div class="text-[9px] text-primary truncate font-mono">+58 AUTH! [wiener]</div>
+</div>
+<!-- M5 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-space-xs">
+<div class="flex items-center justify-between text-[9px] text-outline font-mono">
+<span>M5:FFUF_DIR</span>
+<span class="text-secondary-fixed">QUEUED</span>
+</div>
+<div class="text-body-sm font-body-sm font-bold text-secondary mt-0.5">42 Found</div>
+<div class="text-[9px] text-on-surface-variant truncate font-mono">common.txt</div>
+</div>
+<!-- M6 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-space-xs">
+<div class="flex items-center justify-between text-[9px] text-outline font-mono">
+<span>M6:PARAMS</span>
+<span class="text-tertiary-fixed-dim">ACTIVE</span>
+</div>
+<div class="text-body-sm font-body-sm font-bold text-tertiary mt-0.5">36 Inputs</div>
+<div class="text-[9px] text-tertiary-fixed-dim truncate font-mono">14 Reflected</div>
+</div>
+<!-- M7 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-space-xs">
+<div class="flex items-center justify-between text-[9px] text-outline font-mono">
+<span>M7:JS_MINER</span>
+<span class="text-secondary-fixed">DONE</span>
+</div>
+<div class="text-body-sm font-body-sm font-bold text-secondary-fixed mt-0.5">8 Scripts</div>
+<div class="text-[9px] text-secondary-fixed-dim truncate font-mono">2 DOM Sinks</div>
+</div>
+<!-- M8 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-space-xs">
+<div class="flex items-center justify-between text-[9px] text-outline font-mono">
+<span>M8:TECH_STACK</span>
+<span class="text-primary-container">ID</span>
+</div>
+<div class="text-body-sm font-body-sm font-bold text-primary mt-0.5">PHP 8.1</div>
+<div class="text-[9px] text-on-surface-variant truncate font-mono">Apache/MySQL</div>
+</div>
+</div>
+</section>
+<!-- ==================== 2. LIVE KALI TELEMETRY TERMINAL BOX ==================== -->
+<section class="border border-outline-variant bg-surface-container-lowest p-space-xs crt-scanlines">
+<div class="flex items-center justify-between border-b border-outline-variant pb-1 px-1 mb-1">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-primary-container inline-block"></span>
+<span class="text-label-sm font-label-sm text-primary-container">TELEMETRY_STDOUT [KALI_OFFENSIVE_SOCKET]</span>
+<span class="text-[9px] text-outline font-mono">// PID: 40921 [katana]</span>
+</div>
+<div class="flex items-center gap-2 text-label-sm font-label-sm text-outline">
+<span>PIPE: /dev/shm/recon.pipe</span>
+<button class="text-on-surface-variant hover:text-primary">[CLEAR]</button>
+</div>
+</div>
+<div class="font-mono text-[11px] leading-tight text-primary-container px-1 py-0.5 space-y-0.5 overflow-hidden">
+<p class="text-outline">root@recon:~# [14:28:15] nmap -sC -sV -p 80,443,8080 target-portal.lab -oN nmap_quick.txt</p>
+<p class="text-on-surface-variant">root@recon:~# [14:28:17] ffuf -w /usr/share/seclists/Discovery/Web-Content/common.txt -u https://target-portal.lab/FUZZ -mc 200,301,302,403</p>
+<div class="flex items-baseline gap-1 text-primary">
+<span class="text-primary-container font-bold">root@recon:~#</span>
+<span class="text-primary font-mono">[14:28:18] katana -u https://target-portal.lab/ -H "Cookie: PHPSESSID=s%3Awiener.v94" -d 3 -jc -silent | tee -a crawl_auth.txt</span>
+<span class="cursor-blink"></span>
+</div>
+</div>
+</section>
+<!-- ==================== 3. SPLIT-PANE: ENDPOINT TREE + INSPECTOR ==================== -->
+<div class="grid grid-cols-12 gap-space-sm">
+<!-- ================= LEFT COLUMN: TARGET ENDPOINTS TREE (5 Cols) ================= -->
+<section class="col-span-5 border-tactical bg-surface-container-low flex flex-col">
+<!-- Tree Toolbar & Search -->
+<div class="p-space-sm border-b border-outline-variant flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">folder_open</span>
+                TARGET SCOPE TREE (142 NODES)
+              </span>
+<span class="text-label-sm font-label-sm text-primary-container border border-primary-container px-1">SORT: RISK_SCORE</span>
+</div>
+<!-- Filter Buttons -->
+<div class="grid grid-cols-4 gap-1 text-label-sm font-label-sm">
+<button class="p-1 bg-surface-container border border-outline-variant text-primary hover:border-primary-container text-center">[ALL (142)]</button>
+<button class="p-1 bg-surface-container-high border border-primary-container text-primary-container font-bold text-center phosphor-glow-primary">[! AUTH (58)]</button>
+<button class="p-1 bg-surface-container border border-outline-variant text-tertiary-fixed-dim hover:border-primary-container text-center">[PARAM (36)]</button>
+<button class="p-1 bg-surface-container border border-outline-variant text-secondary-fixed hover:border-primary-container text-center">[REDIR (4)]</button>
+</div>
+<!-- Grep Search Input -->
+<div class="flex items-center gap-1 bg-surface-container-lowest border border-outline-variant px-2 py-1 text-body-sm focus-within:border-primary-container">
+<span class="text-primary-container font-mono text-[11px]">grep:</span>
+<input class="bg-transparent text-primary text-[11px] font-mono border-0 p-0 focus:ring-0 w-full placeholder:text-outline" placeholder="grep / filter URL or endpoint..." type="text"/>
+<span class="text-[9px] text-outline font-mono">ESC</span>
+</div>
+</div>
+<!-- Tree Hierarchy View -->
+<div class="p-space-xs flex flex-col gap-1 overflow-y-auto max-h-[580px] font-mono text-body-sm select-none">
+<!-- Folder 1: /post (Collapsible, High Priority) -->
+<div class="border border-outline-variant bg-surface-container-lowest p-space-xs">
+<div class="flex items-center justify-between text-primary font-bold cursor-pointer hover:text-primary-container">
+<div class="flex items-center gap-1">
+<span class="text-primary-container">[-]</span>
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim">folder</span>
+<span>/post</span>
+<span class="text-[9px] text-error border border-error px-1">2 HIGH</span>
+</div>
+<span class="text-label-sm font-label-sm text-primary-container border border-primary-container px-1">SCORE: 92/100</span>
+</div>
+<!-- Children of /post -->
+<div class="ml-4 pl-2 border-l border-outline-variant mt-1 space-y-1">
+<div class="text-[11px] flex items-center justify-between p-1 text-on-surface-variant hover:bg-surface-container cursor-pointer">
+<span class="flex items-center gap-1">
+<span class="text-outline">├──</span>
+<span class="text-secondary-fixed">[GET]</span> /post?postId=3
+                  </span>
+<span class="text-[9px] text-outline">200 OK</span>
+</div>
+<!-- ACTIVE SELECTED ENDPOINT -->
+<div class="text-[11px] flex items-center justify-between p-1 bg-surface-container-high border-l-2 border-primary-container text-primary font-bold phosphor-glow-primary">
+<span class="flex items-center gap-1">
+<span class="text-primary-container">├──</span>
+<span class="text-primary-container">[GET]</span> /post/comment/confirmation
+                  </span>
+<span class="text-[9px] bg-primary-container text-surface-container-lowest font-bold px-1">[ACTIVE]</span>
+</div>
+<div class="text-[11px] flex items-center justify-between p-1 text-on-surface-variant hover:bg-surface-container cursor-pointer">
+<span class="flex items-center gap-1">
+<span class="text-outline">└──</span>
+<span class="text-tertiary-fixed-dim">[POST]</span> /post/comment
+                  </span>
+<span class="text-[9px] text-tertiary-fixed-dim">CSRF Check</span>
+</div>
+</div>
+</div>
+<!-- Folder 2: /my-account (Auth Zone) -->
+<div class="border border-outline-variant bg-surface-container-lowest p-space-xs">
+<div class="flex items-center justify-between text-primary cursor-pointer hover:text-primary-container">
+<div class="flex items-center gap-1">
+<span class="text-outline">[+]</span>
+<span class="material-symbols-outlined text-[16px] text-primary-container">folder_special</span>
+<span>/my-account</span>
+<span class="text-[9px] text-primary-container border border-primary-container px-1">AUTH ZONE</span>
+</div>
+<span class="text-label-sm font-label-sm text-on-surface-variant">SCORE: 88/100</span>
+</div>
+</div>
+<!-- Folder 3: /admin (403 Forbidden / Critical) -->
+<div class="border border-outline-variant bg-surface-container-lowest p-space-xs">
+<div class="flex items-center justify-between text-error cursor-pointer hover:bg-surface-container">
+<div class="flex items-center gap-1">
+<span class="text-error">[+]</span>
+<span class="material-symbols-outlined text-[16px] text-error">lock</span>
+<span>/admin</span>
+<span class="text-[9px] bg-error-container text-on-error px-1">403 FORBIDDEN</span>
+</div>
+<span class="text-label-sm font-label-sm text-error border border-error px-1">CRITICAL</span>
+</div>
+</div>
+<!-- Folder 4: /api/v1 (REST JSON) -->
+<div class="border border-outline-variant bg-surface-container-lowest p-space-xs">
+<div class="flex items-center justify-between text-secondary cursor-pointer hover:text-secondary-fixed">
+<div class="flex items-center gap-1">
+<span class="text-outline">[+]</span>
+<span class="material-symbols-outlined text-[16px] text-secondary-container">api</span>
+<span>/api/v1</span>
+<span class="text-[9px] text-secondary-fixed border border-secondary-fixed px-1">JSON API</span>
+</div>
+<span class="text-label-sm font-label-sm text-on-surface-variant">8 Endpoints</span>
+</div>
+</div>
+<!-- File Item: /robots.txt -->
+<div class="border border-outline-variant bg-surface-container-lowest p-space-xs flex items-center justify-between text-on-surface-variant text-[11px]">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">description</span>
+<span>/robots.txt</span>
+</div>
+<span class="text-[9px] text-outline">Disallow: /admin</span>
+</div>
+<!-- File Item: /sitemap.xml -->
+<div class="border border-outline-variant bg-surface-container-lowest p-space-xs flex items-center justify-between text-on-surface-variant text-[11px]">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">description</span>
+<span>/sitemap.xml</span>
+</div>
+<span class="text-[9px] text-outline">18 URLs parsed</span>
+</div>
+</div>
+<!-- Tree Status Bar -->
+<div class="p-space-xs border-t border-outline-variant bg-surface-container-lowest text-label-sm font-label-sm text-outline flex justify-between items-center">
+<span>SELECTED: 1/142</span>
+<span class="text-primary-container">BURP SITEMAP REPLICATED</span>
+</div>
+</section>
+<!-- ================= RIGHT COLUMN: ENDPOINT INSPECTOR (7 Cols) ================= -->
+<section class="col-span-7 border-tactical bg-surface-container-low flex flex-col gap-space-sm p-space-sm">
+<!-- Endpoint Detail Header & Quick Send Actions -->
+<div class="border-b border-outline-variant pb-space-sm flex flex-col gap-space-xs">
+<div class="flex items-center justify-between flex-wrap gap-2">
+<div class="flex items-center gap-2">
+<span class="px-1.5 py-0.5 bg-primary-container text-surface-container-lowest font-bold text-label-sm font-label-sm">GET</span>
+<span class="text-headline-sm font-headline-sm font-bold text-primary break-all">/post/comment/confirmation?postId=4</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="text-label-sm font-label-sm border border-primary-container text-primary-container px-1.5 py-0.5 bg-surface-container">[GET 200 OK]</span>
+<span class="text-label-sm font-label-sm bg-error-container text-on-error px-1.5 py-0.5 font-bold">[SCORE: 92/100]</span>
+<span class="text-label-sm font-label-sm border border-secondary-fixed text-secondary-fixed px-1.5 py-0.5">[DOM-INVOKED SINK]</span>
+</div>
+</div>
+<!-- Actions Bar: Repeater, Intruder, Chromium -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-1 text-label-sm font-label-sm">
+<button class="px-2 py-1 bg-surface-container-high border border-primary-container text-primary-container font-bold hover:bg-primary-container hover:text-surface-container-lowest transition-all flex items-center gap-1 active:scale-95">
+<span class="material-symbols-outlined text-[13px]">send</span>
+                  [# REPEATER]
+                </button>
+<button class="px-2 py-1 bg-surface-container border border-outline-variant text-on-surface hover:border-secondary-fixed hover:text-secondary-fixed transition-all flex items-center gap-1 active:scale-95">
+<span class="material-symbols-outlined text-[13px]">bolt</span>
+                  [# INTRUDER]
+                </button>
+<button class="px-2 py-1 bg-surface-container border border-outline-variant text-on-surface hover:border-tertiary-fixed hover:text-tertiary-fixed transition-all flex items-center gap-1 active:scale-95">
+<span class="material-symbols-outlined text-[13px]">open_in_browser</span>
+                  [# CHROMIUM]
+                </button>
+</div>
+<div class="text-label-sm font-label-sm text-outline font-mono">
+                DISCOVERED VIA: M4_CRAWL_AUTH (Spider Thread #4)
+              </div>
+</div>
+</div>
+<!-- OSCP Testing Recommendation box -->
+<div class="border-phosphor bg-surface-container-lowest p-space-sm phosphor-glow-primary">
+<div class="flex items-center justify-between pb-1 border-b border-outline-variant mb-1">
+<span class="text-label-sm font-label-sm text-primary-container flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-primary-container">checklist</span>
+                OSCP EXAM RECOMMENDATION // MANUAL AUDIT CHECKLIST
+              </span>
+<span class="text-label-sm font-label-sm bg-primary-container text-surface-container-lowest px-1 font-bold">HIGH CONFIDENCE</span>
+</div>
+<ul class="text-[11px] font-mono space-y-1 text-on-surface">
+<li class="flex items-start gap-1.5">
+<span class="text-primary-container font-bold">[!]</span>
+<span><strong class="text-primary">Client-side Open Redirect / DOM XSS:</strong> Target parameter <code class="text-secondary-fixed font-bold">returnUrl</code> flows into sink <code class="text-tertiary-fixed-dim">window.location</code> without sanitization.</span>
+</li>
+<li class="flex items-start gap-1.5">
+<span class="text-primary-container font-bold">[#]</span>
+<span><strong class="text-primary">IDOR Checklist:</strong> Parameter <code class="text-primary-container">postId=4</code> returned comment moderation token. Test decrementing to <code class="text-primary-container">postId=1..3</code> for unauth admin comments.</span>
+</li>
+<li class="flex items-start gap-1.5">
+<span class="text-primary-container font-bold">[+]</span>
+<span><strong class="text-primary">Privilege Escalation Vector:</strong> Auth cookies show session differentiation (+4,581 bytes diff between Anonymous and Wiener).</span>
+</li>
+</ul>
+</div>
+<!-- Response Diff Box (Anonymous vs Wiener Authenticated) -->
+<div class="border-tactical bg-surface-container-lowest p-space-sm">
+<div class="flex items-center justify-between pb-1 border-b border-outline-variant mb-1">
+<div class="flex items-center gap-2">
+<span class="text-label-sm font-label-sm text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">difference</span>
+                  RESPONSE DIFF COMPARISON
+                </span>
+<span class="text-[9px] text-outline font-mono">(ANONYMOUS vs WIENER AUTH)</span>
+</div>
+<span class="text-label-sm font-label-sm text-primary-container border border-primary-container px-1 font-bold">+4,581 BYTES DELTA</span>
+</div>
+<div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
+<!-- Anonymous Column -->
+<div class="bg-surface-container p-1 border border-outline-variant">
+<div class="flex justify-between text-outline border-b border-outline-variant pb-0.5 mb-1 font-bold">
+<span>ANONYMOUS REQUEST</span>
+<span class="text-error">HTTP 302 Found</span>
+</div>
+<div class="text-on-surface-variant space-y-0.5">
+<div>Location: /login</div>
+<div>Content-Length: 0 bytes</div>
+<div>Set-Cookie: [NONE]</div>
+<div class="text-outline">// Access denied, redirect to auth</div>
+</div>
+</div>
+<!-- Authenticated Column -->
+<div class="bg-surface-container-high p-1 border border-primary-container">
+<div class="flex justify-between text-primary-container border-b border-outline-variant pb-0.5 mb-1 font-bold">
+<span>AUTH: wiener (Cookie Set)</span>
+<span class="text-primary-container">HTTP 200 OK</span>
+</div>
+<div class="text-primary space-y-0.5">
+<div>Content-Type: text/html; charset=UTF-8</div>
+<div>Content-Length: 4,581 bytes</div>
+<div class="text-secondary-fixed">DOM Element: &lt;div id="comment-status"&gt;</div>
+<div class="text-primary-container font-bold">// FLAG: CSRF_TOKEN_EXPOSED_IN_BODY</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Client Sink & Redirect Trace Code Block -->
+<div class="border-tactical bg-surface-container-lowest p-space-sm">
+<div class="flex items-center justify-between pb-1 border-b border-outline-variant mb-1">
+<span class="text-label-sm font-label-sm text-secondary-fixed flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">code</span>
+                CLIENT-SIDE JS SINK &amp; REDIRECT TRACE (scripts/confirmation.js:42)
+              </span>
+<span class="text-[9px] text-tertiary-fixed-dim font-mono border border-tertiary-fixed-dim px-1">SINK: window.location</span>
+</div>
+<pre class="bg-surface-container p-2 text-[11px] font-mono text-on-surface overflow-x-auto border-l-2 border-secondary-fixed leading-relaxed"><span class="text-outline">// Extracted from target-portal.lab/resources/js/confirmComment.js</span>
+<span class="text-secondary">const</span> urlParams = <span class="text-secondary">new</span> URLSearchParams(window.location.search);
+<span class="text-secondary">const</span> returnUrl = urlParams.get(<span class="text-primary-container">'returnPath'</span>);
+
+<span class="text-outline">// VULNERABLE DOM SINK IDENTIFIED:</span>
+<span class="text-secondary">if</span> (returnUrl) {
+    <span class="text-outline">// Heuristic match: DOM-based Open Redirect or Javascript URI execution</span>
+    <span class="text-error font-bold">window.location</span> = decodeURIComponent(returnUrl); 
+}</pre>
+</div>
+<!-- Extracted Parameters Table -->
+<div class="border-tactical bg-surface-container-lowest p-space-sm">
+<div class="flex items-center justify-between pb-1 border-b border-outline-variant mb-1">
+<span class="text-label-sm font-label-sm text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">tune</span>
+                EXTRACTED INPUT PARAMETERS &amp; REFLECTION AUDIT
+              </span>
+<span class="text-label-sm font-label-sm text-outline">3 PARAMETERS FOUND</span>
+</div>
+<table class="w-full text-left font-mono text-[10px] border-collapse">
+<thead>
+<tr class="text-secondary-fixed border-b border-outline-variant uppercase">
+<th class="py-1 px-1">Parameter</th>
+<th class="py-1 px-1">Type</th>
+<th class="py-1 px-1">Sample Value</th>
+<th class="py-1 px-1">Security Heuristic</th>
+<th class="py-1 px-1 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="py-1 px-1 font-bold text-primary">postId</td>
+<td class="py-1 px-1 text-outline">QUERY [int]</td>
+<td class="py-1 px-1 text-on-surface font-mono">4</td>
+<td class="py-1 px-1"><span class="px-1 border border-primary-container text-primary-container">[IDOR CHECK: LOW RISK]</span></td>
+<td class="py-1 px-1 text-right"><button class="text-primary-container hover:underline">[FUZZ]</button></td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors bg-surface-container/50">
+<td class="py-1 px-1 font-bold text-secondary-fixed">returnPath</td>
+<td class="py-1 px-1 text-outline">QUERY [url]</td>
+<td class="py-1 px-1 text-on-surface font-mono">/post?postId=4</td>
+<td class="py-1 px-1"><span class="px-1 bg-error-container text-on-error font-bold">[DOM SINK: OPEN_REDIRECT]</span></td>
+<td class="py-1 px-1 text-right"><button class="text-secondary-fixed hover:underline">[EXPLOIT]</button></td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="py-1 px-1 font-bold text-primary">csrfToken</td>
+<td class="py-1 px-1 text-outline">BODY [hex]</td>
+<td class="py-1 px-1 text-on-surface font-mono">8f92a10b4c8...</td>
+<td class="py-1 px-1"><span class="px-1 border border-outline-variant text-on-surface-variant">[ANTICSFR_STATIC]</span></td>
+<td class="py-1 px-1 text-right"><button class="text-on-surface hover:underline">[TEST BYPASS]</button></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Burp Repeater 1-Click Payload Box -->
+<div class="border-phosphor bg-surface-container-lowest p-space-sm">
+<div class="flex items-center justify-between pb-1 border-b border-outline-variant mb-1">
+<span class="text-label-sm font-label-sm text-primary-container flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">terminal</span>
+                BURP REPEATER RAW HTTP STREAM [1-CLICK EXECUTE]
+              </span>
+<div class="flex items-center gap-1">
+<button class="px-2 py-0.5 text-label-sm font-label-sm bg-primary-container text-surface-container-lowest font-bold hover:brightness-110 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">content_copy</span>
+                  COPY RAW HTTP
+                </button>
+<button class="px-2 py-0.5 text-label-sm font-label-sm border border-primary-container text-primary-container hover:bg-surface-container">
+                  SEND TO REPEATER
+                </button>
+</div>
+</div>
+<pre class="bg-surface-container-lowest p-2 text-[10px] font-mono text-primary overflow-x-auto leading-normal">GET /post/comment/confirmation?postId=4&amp;returnPath=javascript%3Aalert(document.domain) HTTP/1.1
+Host: target-portal.lab
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Cookie: PHPSESSID=s%3Awiener.v94b281f9a20d; session_auth=active_oscp
+Connection: close</pre>
+</div>
+</section>
+</div>
+</main>
+<!-- Bottom Status Bar -->
+<footer class="mt-auto px-space-md py-1 border-t border-outline-variant bg-surface-container-lowest flex justify-between items-center text-label-sm font-label-sm text-outline font-mono select-none">
+<div class="flex items-center gap-3">
+<span class="flex items-center gap-1 text-primary-container">
+<span class="w-1.5 h-1.5 bg-primary-container inline-block"></span>
+          SYS: KALI_RECON_DAEMON [ONLINE]
+        </span>
+<span>UPTIME: 01h 14m 22s</span>
+<span>MEM: 642MB / 4096MB</span>
+<span class="text-secondary-fixed">BURP PROXY: 127.0.0.1:8080 [PASS-THROUGH]</span>
+</div>
+<div class="flex items-center gap-3">
+<span>MODE: OSCP_OFFENSIVE_COMPLIANT</span>
+<span class="text-primary-container font-bold">TARGET: target-portal.lab [SCOPE: 192.168.182.140]</span>
+</div>
+</footer>
+</div>
+</body></html>

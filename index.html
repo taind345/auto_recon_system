@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AUTO_RECON v2 — OSCP Safe Rail</title>
+<link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body>
+<aside id="rail" aria-label="navigation">
+  <div class="brand">
+    <div class="t">AUTO_RECON<span class="ver">v2.4.1</span></div>
+    <div class="sub"><span class="dot"></span><span data-i18n="app_sub">OSCP Safe Rail</span><span class="sec">SEC:0x7F</span></div>
+    <div class="sub mut" data-i18n="tagline" style="font-size:9px">enum-only · OSCP-safe · không auto-exploit</div>
+    <div class="sub" id="health" style="font-size:9px">…</div>
+  </div>
+  <div id="scope">
+    <div class="hd"><span>◆ <span data-i18n="scope_title">TARGET SCOPE</span></span><span class="chip">[IN_SCOPE]</span></div>
+    <div class="host" id="scopeHost">—</div>
+    <div class="meta"><span id="scopeRtt">RTT: —</span><span id="scopeHome">—</span></div>
+  </div>
+  <nav>
+    <button class="nav-it" data-cat="overview"><span class="ic">◈</span><span class="lbl" data-i18n="nav_overview">Overview</span><span class="cnt">[MAP]</span></button>
+    <button class="nav-it" data-cat="subdomains"><span class="ic">▣</span><span class="lbl" data-i18n="nav_subdomains">Subdomains</span> <span class="cnt" id="cnt-subs">0</span></button>
+    <button class="nav-it" data-cat="ports"><span class="ic">≣</span><span class="lbl" data-i18n="nav_ports">Ports</span> <span class="cnt" id="cnt-ports">0</span></button>
+    <button class="nav-it on" data-cat="endpoints"><span class="ic">⑂</span><span class="lbl" data-i18n="nav_endpoints">Endpoints Tree</span> <span class="cnt" id="cnt-endpoints">0</span></button>
+    <button class="nav-it" data-cat="params"><span class="ic">☰</span><span class="lbl" data-i18n="nav_params">Params &amp; Inputs</span> <span class="cnt" id="cnt-params">0</span></button>
+    <button class="nav-it" data-cat="js"><span class="ic">&lt;/&gt;</span><span class="lbl" data-i18n="nav_js">JS &amp; Links</span> <span class="cnt" id="cnt-js">0</span></button>
+    <button class="nav-it" data-cat="tech"><span class="ic">▤</span><span class="lbl" data-i18n="nav_tech">Tech &amp; Files</span></button>
+    <button class="nav-it" data-cat="auth"><span class="ic">⇄</span><span class="lbl" data-i18n="nav_auth">Auth Matrix</span></button>
+    <button class="nav-it" data-cat="notes"><span class="ic">✎</span><span class="lbl" data-i18n="nav_notes">Notes &amp; Export</span></button>
+  </nav>
+  <div class="foot">
+    <button class="railbtn ghost" id="btnBurpCopy">[+] Quick Burp Copy</button>
+    <div id="authbox">
+      <div class="a1" id="authUserLbl">[#] AUTH: off</div>
+      <div class="a2" id="sessMsg">auth: off</div>
+    </div>
+    <div class="mut" style="font-size:10px"><span data-i18n="enum_only">Enum-Only Mode</span> · OSCP Safe</div>
+  </div>
+</aside>
+
+<div id="wrap">
+<header>
+  <span class="prompt">&gt;&gt;&gt;</span>
+  <input id="target" type="text" data-i18n-ph="target_ph" placeholder="https://target/  (dán domain rồi Scan)" value="">
+  <span class="chip dim" id="homeChip">[—]</span>
+  <select id="profile" aria-label="profile">
+    <option value="fast" data-i18n="profile_fast">Nhanh ~2m</option>
+    <option value="deep" data-i18n="profile_deep">Sâu ~8m</option>
+    <option value="exam" data-i18n="profile_exam" selected>OSCP-thi</option>
+  </select>
+  <button id="btnScan" class="act" data-i18n="scan">Launch Scan</button>
+  <button id="btnStop" class="danger" data-i18n="stop">Stop</button>
+  <button id="btnExport" class="ghost" data-i18n="export">Export</button>
+  <button id="btnTheme" class="icon-btn" title="theme">☾</button>
+  <button id="btnLang" class="icon-btn" title="lang">EN</button>
+</header>
+
+<header id="authbar" class="panel" style="border:0;border-bottom:1px solid var(--line2)">
+  <span class="lbl" data-i18n="auth">Auth</span>
+  <select id="authMode"><option value="off">off</option><option value="cookie">cookie</option><option value="bearer">bearer</option><option value="login">login</option></select>
+  <input id="loginUrl" type="text" placeholder="login url https://target/login" style="width:220px">
+  <input id="authUser" type="text" placeholder="username (wiener)" style="width:150px">
+  <input id="authPass" type="password" placeholder="password" style="width:150px" autocomplete="off">
+  <input id="authCookie" type="text" placeholder="Cookie: session=…" style="width:220px">
+  <input id="authBearer" type="text" placeholder="Bearer token…" style="width:220px">
+  <input id="proxy" type="text" placeholder="proxy 127.0.0.1:8080" style="width:140px">
+  <button id="btnCheck" class="ghost" data-i18n="check_session">Check session</button>
+</header>
+
+<main>
+  <section class="panel" aria-label="pipeline">
+    <div class="panel-h"><span>⇅ <span data-i18n="pipeline">PIPELINE EXECUTION STATUS // OSCP SAFE PROFILE</span></span><span class="sp"></span><span class="r">threads ≤20 · 60s/tool · 200 urls</span></div>
+    <div id="mods"></div>
+  </section>
+
+  <section class="panel" aria-label="telemetry">
+    <div class="panel-h"><span>● <span data-i18n="telemetry">TELEMETRY_STDOUT [KALI_OFFENSIVE_SOCKET]</span></span><span class="sp"></span><span class="r" id="teleMeta">PIPE: /dev/shm/recon.pipe</span></div>
+    <div id="log"><div class="ln mut">root@recon:~# idle — paste target, choose profile, Launch Scan <span class="cursor-blink"></span></div></div>
+  </section>
+
+  <div id="split">
+    <section class="panel" aria-label="tree">
+      <div class="panel-h"><span>▤ <span data-i18n="tree_title">TARGET SCOPE TREE</span></span><span class="sp"></span><span class="chip">SORT: RISK_SCORE</span></div>
+      <div id="tree-tools">
+        <div id="filters">
+          <button data-f="all" class="ghost on" data-i18n="filter_all">TẤT CẢ</button>
+          <button data-f="auth" class="ghost" data-i18n="filter_auth">AUTH-ONLY</button>
+          <button data-f="params" class="ghost" data-i18n="filter_params">CÓ PARAMS</button>
+          <button data-f="redir" class="ghost" data-i18n="filter_redir">REDIRECT/SINK</button>
+        </div>
+        <div class="grep"><span class="k">grep:</span><input id="q" type="text" data-i18n-ph="search_ph" placeholder="grep: lọc endpoint / param / tag… (ESC xóa)"><span class="esc">ESC</span></div>
+      </div>
+      <div id="tree"><div class="skel" data-i18n="empty">Chưa có dữ liệu — bấm Launch Scan.</div></div>
+      <div id="treebar"><span id="treeSel">SELECTED: 0/0</span><span class="r">BURP SITEMAP REPLICATED</span></div>
+    </section>
+    <section class="panel" aria-label="inspector">
+      <div class="panel-h"><span>INSPECTOR</span><span class="sp"></span><span class="r" id="inspMeta">// select endpoint</span></div>
+      <div id="insp"><p class="mut" data-i18n="detail_hint">Click 1 endpoint bên trái để xem: JS, hrefs, forms/params, diff anon-vs-auth, raw, Burp.</p></div>
+    </section>
+  </div>
+</main>
+<footer>
+  <span><span class="dot"></span> SYS: KALI_RECON_DAEMON [<b id="ftStatus">ONLINE</b>] · <span id="ftProxy">BURP: off</span></span>
+  <span>MODE: OSCP_OFFENSIVE_COMPLIANT · TARGET: <b id="ftTarget">—</b></span>
+</footer>
+</div>
+<script src="/static/js/i18n.js"></script>
+<script src="/static/js/app.js"></script>
+</body>
+</html>

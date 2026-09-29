@@ -1,0 +1,59 @@
+# ============ AUTO_RECON .gitignore ============
+# Kết quả quét (chứa dữ liệu target — nhạy cảm, không commit)
+scans/
+202*/
+
+# Session / secret / credential (không bao giờ commit)
+.env
+.env.*
+*.pem
+*.key
+*session*.txt
+*cookie*.txt
+credentials*.json
+secrets*.txt
+
+# Wordlist & note cá nhân
+words/custom*.txt
+words/private*.txt
+NOTES*.md
+notes-local/
+
+# Log & output chạy local
+*.log
+nohup.out
+*.tmp
+/tmp/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# Binary tool tải tay (geckodriver, wordlist nén...)
+geckodriver
+geckodriver*.tar.gz
+*.tar.gz
+*.zip
+
+# Download/export local (report, json, csv xuất ra)
+dl/
+downloads/
+recon*.json
+recon*.csv
+recon*.md
+
+# Browser test profile & screenshot local (docs/ screenshots are committed on purpose)
+shots/
+.mozilla/
+
+# OS & editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~

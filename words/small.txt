@@ -1,0 +1,17 @@
+/post/comment/confirmation
+/resources/js/commentConfirmationRedirect.js
+/my-account/change-email
+/my-account
+/login
+/logout
+/post/comment
+/post/1
+/post/9
+/api
+/admin
+/robots.txt
+/sitemap.xml
+/.git/HEAD
+/.env
+/console
+/dashboard
