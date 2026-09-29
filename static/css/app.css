@@ -180,8 +180,10 @@ main{padding:10px;display:flex;flex-direction:column;gap:10px;flex:1}
 .actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .actions .via{margin-left:auto;font-size:10px;color:var(--dim)}
 .tabs{display:flex;gap:4px;flex-wrap:wrap;margin:8px 0}
-.tabs button{padding:5px 10px;font-size:10px;letter-spacing:.05em}
-.tabs button.on{background:var(--acc);color:var(--on-acc);font-weight:700;border:1px solid var(--acc)}
+.tabs button{background:transparent;border:1px solid var(--line2);color:var(--mut);padding:5px 10px;
+  font-size:10px;letter-spacing:.05em;cursor:pointer;text-transform:uppercase}
+.tabs button:hover{color:var(--acc);border-color:var(--acc)}
+.tabs button.on{background:var(--acc);color:var(--on-acc);font-weight:700;border-color:var(--acc);box-shadow:var(--glow)}
 pre{background:var(--bg0);border:1px solid var(--line2);padding:10px;overflow:auto;max-height:380px;
   white-space:pre-wrap;word-break:break-all;font-size:11px;margin:6px 0}
 pre.code{border-left:2px solid var(--cyan);background-image:var(--scan)}

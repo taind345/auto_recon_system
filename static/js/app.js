@@ -252,7 +252,7 @@ async function sendRaw(e){const btn=$("#sendReq"),out=$("#repRes"),meta=$("#repM
   try{
     const r=await api("/api/send",{method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({job:S.job,raw:$("#rawReq").value,use_session:$("#useSess").checked})});
-    if(r.error){meta.textContent="// ERR: "+r.error;out.textContent="";return;}
+    if(r.error){meta.textContent="// ERR: "+r.error+(r.error==="not found"?" → backend cũ, restart app.py bản mới nhất":"");out.textContent="";return;}
     meta.textContent=`// HTTP ${r.status} · ${r.len}b · ${r.ms}ms${r.location?` · Location: ${r.location}`:""}`;
     out.textContent=`HTTP ${r.status} (${r.ms}ms)\n${Object.entries(r.headers||{}).map(([k,v])=>`${k}: ${v}`).join("\n")}\n\n${r.body||""}`;
   }catch(err){meta.textContent="// ERR: "+err.message;}
