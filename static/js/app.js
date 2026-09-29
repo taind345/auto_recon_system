@@ -56,7 +56,9 @@ async function scan(){const t=$("#target").value.trim();if(!t)return;
   $("#ftTarget").textContent=t;$("#ftStatus").textContent="SCANNING";
   try{
     const r=await api("/api/scan",{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({target:t,profile:$("#profile").value,auth:authPayload(),proxy:$("#proxy").value.trim()})});
+      body:JSON.stringify({target:t,profile:$("#profile").value,auth:authPayload(),proxy:$("#proxy").value.trim(),
+        wordlist:$("#wlTier").value||null,custom_words:window._customWords||[],
+        extensions:$("#extList").value.trim()})});
     if(!r.job_id)throw new Error(r.error||"scan failed");
     S.job=r.job_id;pollProg();pollRes();S.progTimer=setInterval(pollProg,1000);
     S.resTimer=setInterval(pollRes,2000);
@@ -300,6 +302,12 @@ function wire(){
   $("#q").addEventListener("input",debounce(ev=>{S.q=ev.target.value;renderTree();},180));
   $("#q").addEventListener("keydown",ev=>{if(ev.key==="Escape"){ev.target.value="";S.q="";renderTree();}});
   $("#authMode").onchange=updateAuthFields;updateAuthFields();
+  $("#wlTier").onchange=()=>{$("#wlFile").style.display=$("#wlTier").value==="custom"?"":"none";};
+  $("#wlFile").onchange=ev=>{const f=ev.target.files[0];if(!f)return;
+    if(f.size>262144){ev.target.value="";return;}
+    const rd=new FileReader();
+    rd.onload=()=>{window._customWords=String(rd.result||"").split(/\r?\n/).map(s=>s.trim()).filter(Boolean).slice(0,5000);};
+    rd.readAsText(f);};
   document.addEventListener("keydown",ev=>{if(ev.key==="Enter"&&document.activeElement===$("#target"))scan();});
 }
 document.addEventListener("DOMContentLoaded",wire);

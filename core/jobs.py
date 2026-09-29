@@ -1,5 +1,6 @@
 """JobEngine: async 8-module pipeline, progress streaming, cancel, fail-soft."""
 from __future__ import annotations
+import os
 import threading
 import time
 import uuid
@@ -25,12 +26,18 @@ class JobEngine:
         self._lock = threading.Lock()
 
     # -- public API --
-    def create(self, target: str, profile: str, auth: dict, proxy: str) -> str:
+    def create(self, target: str, profile: str, auth: dict, proxy: str,
+               opts: dict | None = None) -> str:
         jid = uuid.uuid4().hex[:10]
         profile = profile if profile in PROFILES else "exam"
+        opts = opts or {}
+        tier = opts.get("wordlist") if opts.get("wordlist") in ("small", "medium", "large", "custom") else None
+        custom_path = self._store_custom_words(jid, opts.get("custom_words") or [])
         job = {
             "id": jid, "target": target, "profile": profile,
             "profile_cfg": dict(PROFILES[profile]), "limits": dict(LIMITS),
+            "wordlist": tier, "custom_wl_path": custom_path,
+            "extensions": str(opts.get("extensions") or "")[:200],
             "auth": {k: v for k, v in (auth or {}).items() if k != "pass"},
             "auth_secret": (auth or {}).get("pass", ""),
             "auth_session": None,  # memory-only: {mode, cookie/bearer, user}
@@ -61,6 +68,25 @@ class JobEngine:
         t = threading.Thread(target=self._run, args=(jid,), daemon=True)
         t.start()
         return jid
+
+    @staticmethod
+    def _store_custom_words(jid: str, words) -> str:
+        """Persist uploaded wordlist to a temp file (deleted in _finish)."""
+        import tempfile
+        lines: list[str] = []
+        for w in (words or [])[: LIMITS.get("custom_wl_lines", 5000)]:
+            w = str(w or "").strip().lstrip("/")[:128]
+            if w and " " not in w and w not in lines:
+                lines.append(w)
+        if not lines:
+            return ""
+        try:
+            fd, path = tempfile.mkstemp(prefix=f"ar_wl_{jid}_", suffix=".txt")
+            with open(fd, "w", encoding="utf-8") as f:
+                f.write("\n".join(lines) + "\n")
+            return path
+        except OSError:
+            return ""
 
     def get(self, jid: str) -> dict | None:
         with self._lock:
@@ -133,6 +159,8 @@ class JobEngine:
         ctx = {"target": job["target"], "profile_cfg": job["profile_cfg"],
                "limits": job["limits"], "proxy": job["proxy"],
                "auth_session": job.get("auth_session"),
+               "wordlist": job.get("wordlist"), "custom_wl_path": job.get("custom_wl_path", ""),
+               "extensions": job.get("extensions", ""),
                "cancel": lambda: self._cancelled(job)}
         target, has_auth = job["target"], has_credential(job.get("auth_session"))
         self._log(job, f"scan start {target} profile={job['profile']} auth={'on' if has_auth else 'off'}")
@@ -341,6 +369,12 @@ class JobEngine:
             self._log(job, f"soft-404 calibrate: {n} ffuf hits tagged (len={sig})")
 
     def _finish(self, job: dict, cancelled: bool = False) -> None:
+        # custom wordlist temp file: remove, never keep uploads on disk
+        try:
+            if job.get("custom_wl_path"):
+                os.remove(job["custom_wl_path"])
+        except OSError:
+            pass
         with self._lock:
             job["status"] = "cancelled" if cancelled else "done"
             job["finished"] = time.time()

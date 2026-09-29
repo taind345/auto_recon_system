@@ -14,6 +14,8 @@ LIMITS = {
     "crawl_pages": 30,    # max pages for internal crawl enrichment
     "threads": 20,        # max worker threads
     "brute_hits": 100,
+    "custom_wl_lines": 5000,  # custom upload cap
+    "custom_wl_kb": 256,
 }
 
 PROFILES = {

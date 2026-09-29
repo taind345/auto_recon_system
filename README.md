@@ -68,7 +68,7 @@ config.py         limits + profiles + 8 modules
 core/             scope / http / parse / jobs (JobEngine) / store
 modules/          ports, passive, crawl, brute, params_js, tech, auth
 index.html + static/   UI offline (dark/light, VI/EN)
-words/            wordlist small/medium · scans/  kết quả (gitignored)
+words/            wordlist Nhỏ ~160 / Vừa ~1k (bundle) + Lớn (SecLists hệ thống) + upload custom · scans/  kết quả (gitignored)
 tests/            suite đầy đủ · tests/manual/  test UI bằng Firefox
 ```
 

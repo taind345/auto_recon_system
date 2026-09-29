@@ -8,15 +8,46 @@ from core.http import auth_headers
 
 APP_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# system SecLists used for the "large" tier (never bundled into the repo)
+SECLISTS_LARGE = [
+    "/usr/share/seclists/Discovery/Web-Content/raft-medium-words.txt",
+    "/usr/share/seclists/Discovery/Web-Content/raft-small-words.txt",
+    "/usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt",
+]
+DEFAULT_EXT = ".bak,.old,.json,.js"
 
-def wordlist_for(ctx: dict) -> str:
-    want = ctx["profile_cfg"].get("ffuf_wordlist", "small")
-    for cand in (f"words/{want}.txt", f"words_{want}.txt", "words.txt",
+
+def wordlist_for(ctx: dict) -> tuple[str, str]:
+    """Resolve (path, label). Tier: custom upload > large seclists > bundled."""
+    tier = ctx.get("wordlist") or ctx["profile_cfg"].get("ffuf_wordlist", "small")
+    if tier == "custom":
+        p = ctx.get("custom_wl_path", "")
+        if p and os.path.isfile(p):
+            return p, "custom(upload)"
+        tier = "small"
+    if tier == "large":
+        for p in SECLISTS_LARGE:
+            if os.path.isfile(p):
+                return p, "seclists:" + os.path.basename(p)
+        tier = "medium"  # seclists absent (non-Kali): fall back, never crash
+    for cand in (f"words/{tier}.txt", f"words_{tier}.txt", "words.txt",
                  "words/medium.txt", "words/small.txt"):
         p = os.path.join(APP_DIR, cand)
         if os.path.isfile(p):
-            return p
-    return os.path.join(APP_DIR, "words.txt")
+            return p, os.path.basename(p)
+    return os.path.join(APP_DIR, "words.txt"), "words.txt"
+
+
+def extensions_for(ctx: dict) -> str:
+    raw = str(ctx.get("extensions") or DEFAULT_EXT)
+    out: list[str] = []
+    for e in raw.split(","):
+        e = e.strip().lower().lstrip(".")
+        if re.fullmatch(r"[a-z0-9]{1,8}", e or "") and e not in [x.lstrip(".") for x in out]:
+            out.append("." + e)
+        if len(out) >= 10:
+            break
+    return ",".join(out) if out else DEFAULT_EXT
 
 
 def _auth_flags(auth: dict | None) -> list[str]:
@@ -54,7 +85,7 @@ def _parse_hits(out: str, target: str) -> list[str]:
 def run(ctx: dict) -> dict:
     target = ctx["target"]
     timeout = ctx["limits"]["per_tool_s"]
-    wl = wordlist_for(ctx)
+    wl, label = wordlist_for(ctx)
     if not os.path.isfile(wl):
         return {"hits": [], "msg": "wordlist missing"}
     if not shutil.which("ffuf"):
@@ -62,7 +93,7 @@ def run(ctx: dict) -> dict:
     cmd = ["ffuf", "-u", target.rstrip("/") + "/FUZZ", "-w", wl,
            "-mc", "200,301,302,403", "-s", "-t",
            str(min(ctx["profile_cfg"].get("threads", 20), 20)),
-           "-timeout", "8", "-e", ".bak,.old,.json,.js",
+           "-timeout", "8", "-e", extensions_for(ctx),
            *_auth_flags(ctx.get("auth_session")), *_proxy_flags(ctx.get("proxy", ""))]
     out = run_cmd(cmd, timeout=timeout + 10)
     hits = _parse_hits(out, target)
@@ -78,4 +109,4 @@ def run(ctx: dict) -> dict:
             hits += _parse_hits(o2, target)
     hits = sorted(set(hits))[: ctx["limits"]["brute_hits"]]
     # soft-404 calibrate note: caller compares len vs home len
-    return {"hits": hits, "msg": f"ffuf: {len(hits)} hits ({os.path.basename(wl)})"}
+    return {"hits": hits, "msg": f"ffuf: {len(hits)} hits ({label})"}

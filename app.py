@@ -151,7 +151,12 @@ class Handler(BaseHTTPRequestHandler):
             profile = req.get("profile", "exam")
             auth = req.get("auth", {"mode": "off"}) or {"mode": "off"}
             proxy = (req.get("proxy") or "").strip()
-            jid = ENGINE.create(target, profile, auth, proxy)
+            wl = req.get("wordlist") if req.get("wordlist") in ("small", "medium", "large", "custom") else None
+            customs = req.get("custom_words") or []
+            customs = [str(w or "")[:128] for w in customs[:5000] if str(w or "").strip()]
+            opts = {"wordlist": wl, "custom_words": customs,
+                    "extensions": str(req.get("extensions") or "")[:200]}
+            jid = ENGINE.create(target, profile, auth, proxy, opts)
             self._json({"job_id": jid, "schema": SCHEMA})
             return
 

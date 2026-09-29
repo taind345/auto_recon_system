@@ -155,6 +155,20 @@ class TestApi(unittest.TestCase):
         eps = {e["url"] for e in self._eps(job)}
         self.assertIn(self.t + "/login", eps)
 
+    def test_11_custom_wordlist(self):
+        if not self.HAS_FFUF:
+            self.skipTest("ffuf missing")
+        r = api(self.base, "/api/scan",
+                {"target": self.t, "profile": "fast", "auth": {"mode": "off"},
+                 "wordlist": "custom", "custom_words": ["login", "zznope123"]})
+        job = r["job_id"]
+        prog = wait_done(self.base, job)
+        self.assertEqual(prog["status"], "done")
+        self.assertIn("custom", prog["modules"]["brute"]["msg"])
+        eps = {e["url"] for e in self._eps(job)}
+        self.assertIn(self.t + "/login", eps)
+        self.assertNotIn(self.t + "/zznope123", eps)
+
     def _send(self, job, raw, use_session=True):
         return api(self.base, "/api/send",
                    {"job": job, "raw": raw, "use_session": use_session})

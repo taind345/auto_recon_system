@@ -66,6 +66,16 @@
   <input id="authCookie" type="text" placeholder="Cookie: session=…" style="width:220px">
   <input id="authBearer" type="text" placeholder="Bearer token…" style="width:220px">
   <input id="proxy" type="text" placeholder="proxy 127.0.0.1:8080" style="width:140px">
+  <span class="lbl">WL</span>
+  <select id="wlTier" aria-label="wordlist">
+    <option value="" data-i18n="wl_auto">auto (theo profile)</option>
+    <option value="small" data-i18n="wl_small">Nhỏ ~160 (nhanh)</option>
+    <option value="medium" data-i18n="wl_medium">Vừa ~1k</option>
+    <option value="large" data-i18n="wl_large">Lớn SecLists</option>
+    <option value="custom" data-i18n="wl_custom">Custom upload…</option>
+  </select>
+  <input id="wlFile" type="file" accept=".txt,.lst" style="display:none;width:170px">
+  <input id="extList" type="text" placeholder="ext: .bak,.old,.json,.js" style="width:170px">
   <button id="btnCheck" class="ghost" data-i18n="check_session">Check session</button>
 </header>
 
