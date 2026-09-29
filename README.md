@@ -1,4 +1,4 @@
-# AUTO_RECON SYSTEM — tôi chán recon kiểu khổ sở, nên tôi build cái này
+# AUTO_RECON SYSTEM — khi bạn chán recon bằng tay :////// 
 
 Tôi đã từng recon như thế này: mở 5–6 tab terminal cùng lúc — một tab `nmap`, một tab `katana`, một tab `ffuf`, thêm tab `waybackurls`… output trôi vèo vèo, mắt dán vào chữ trắng nền đen đến mỏi nhừ. Quét xong lại copy từng URL sang Burp bằng tay. Login vào lab rồi mà tool vẫn quét chay như chưa hề đăng nhập. Cuối buổi nhìn lại: một đống output rời rạc, không biết endpoint nào đáng nhìn, không biết mình đang ở bước nào.
 
