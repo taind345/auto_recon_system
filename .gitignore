@@ -1,4 +1,7 @@
 # ============ AUTO_RECON .gitignore ============
+# Bản thảo thiết kế nội bộ (không public)
+PLAN-v2*.md
+
 # Kết quả quét (chứa dữ liệu target — nhạy cảm, không commit)
 scans/
 202*/

@@ -210,7 +210,7 @@ function showDetail(sub){const e=cur();const box=$("#insp");if(!e){box.innerHTML
   <div class="actions"><button class="ghost" id="saveNote">Save note</button></div></div>`;
   box.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>showDetail(b.dataset.t));
   const req=burpReq(e,(S.cache.auth?.items?.mode!=="off")?(window._lastCookie||""):"");
-  $("#bRep").onclick=()=>navigator.clipboard.writeText(req||e.url);
+  $("#bRep").onclick=()=>showDetail("burp"); // jump straight into the repeater
   $("#bInt").onclick=()=>navigator.clipboard.writeText(req||e.url);
   $("#bChr").onclick=()=>window.open(e.url,"_blank");
   $("#saveNote").onclick=async()=>{S.notes[e.url]=$("#noteBox").value;
