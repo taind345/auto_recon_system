@@ -26,6 +26,15 @@ Nó là một hệ thống **all-in-one**: bạn dán 1 domain vào, bấm **1 n
 ![Params & Inputs](docs/screenshot-params.png)
 *Bảng params toàn site: sample value, heuristic IDOR/open-redirect, copy 1 click.*
 
+![Xem mã JS trực tiếp của 1 endpoint](docs/shot-js-view.png)
+*Tab JS files: bấm [VIEW] là đọc ngay source JS của endpoint — moi fetch/API, DOM sink, secret mà không cần mở DevTools.*
+
+![Auto check params](docs/shot-params-check.png)
+*Bảng params tự gắn heuristic: `productId=1` → [IDOR CHECK], redirect-param → [SINK: OPEN-REDIRECT] — biết ngay chỗ nào đáng test tay.*
+
+![Repeater gửi request](docs/shot-repeater.png)
+*Repeater built-in: sửa raw request, tick Kèm session, SEND — đọc status/headers/body ngay trong app, khỏi chuyển qua Burp.*
+
 ## 30 giây là chạy
 
 ```bash
